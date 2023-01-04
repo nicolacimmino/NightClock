@@ -20,6 +20,7 @@
 #include <uRTCLib.h>
 #include <Adafruit_APDS9960.h>
 #include <TM1637Display.h>
+#include "ToFSensor.h"
 
 #define DISPLAY_CLK 4
 #define DISPLAY_DIO 5
@@ -30,6 +31,7 @@ Adafruit_APDS9960 apds;
 TM1637Display display(DISPLAY_CLK, DISPLAY_DIO);
 bool dim = true;
 bool active = false;
+ToFSensor *tofSensor;
 
 uint8_t diplayData[] = {0x00, 0x00, 0x00, 0x00};
 
@@ -43,6 +45,16 @@ void blankDisplay()
     }
 
     display.setSegments(diplayData);
+}
+
+void onAction(uint8_t action)
+{
+    if (!active)
+    {
+        lastActionTime = millis();
+        active = true;
+        showTime();
+    }
 }
 
 void setup()
@@ -62,6 +74,8 @@ void setup()
     display.setBrightness(0x00);
 
     blankDisplay();
+
+    tofSensor = new ToFSensor(onAction);
 }
 
 void showTime()
@@ -81,17 +95,12 @@ void showTime()
 
 void loop()
 {
+    tofSensor->loop();
+
     if (millis() - lastActionTime > 3000)
     {
         active = false;
         blankDisplay();
-    }
-
-    if (!active && apds.readProximity() > 5)
-    {
-        lastActionTime = millis();
-        active = true;
-        showTime();
     }
 
     uint16_t r, g, b, c;
@@ -102,6 +111,6 @@ void loop()
 
         uint16_t lux = apds.calculateLux(r, g, b);
 
-        dim = (lux < 10);       
+        dim = (lux < 10);
     }
 }

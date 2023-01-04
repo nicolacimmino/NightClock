@@ -5,7 +5,7 @@
 #include <Wire.h>
 #include <VL53L0X.h>
 
-#define GESTURE_TIMEOUT_MS 700
+#define GESTURE_TIMEOUT_MS 10
 
 class ToFSensor
 {
