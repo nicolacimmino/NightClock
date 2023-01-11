@@ -1,3 +1,5 @@
+## Night Clock
+
 A simple night clock activated by waving a hand over it. It was born by the desire to see the current time at night without being blinded by a mobile phone screen. The dim, red LED display prevents illuminating the room when the clock is activated, a fetaure common in all the good old alarm clocks.
 
 ![assembled](documentation/assembled_small.jpg)
