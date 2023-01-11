@@ -33,7 +33,7 @@ bool dim = true;
 bool active = false;
 ToFSensor *tofSensor;
 
-uint8_t diplayData[] = {0x00, 0x00, 0x00, 0x00};
+uint8_t displayData[] = {0x00, 0x00, 0x00, 0x00};
 
 unsigned long lastActionTime = 0;
 
@@ -41,10 +41,10 @@ void blankDisplay()
 {
     for (uint8_t ix = 0; ix < 4; ix++)
     {
-        diplayData[ix] = 0;
+        displayData[ix] = 0;
     }
 
-    display.setSegments(diplayData);
+    display.setSegments(displayData);
 }
 
 void onAction(uint8_t action)
@@ -53,7 +53,6 @@ void onAction(uint8_t action)
     {
         lastActionTime = millis();
         active = true;
-        showTime();
     }
 }
 
@@ -61,7 +60,7 @@ void setup()
 {
     Wire.begin();
 
-    //rtc.set(0, 44, 18, 6, 2, 5, 15);
+    //rtc.set(0, 05, 18, 6, 2, 5, 15);
 
     Serial.begin(115200);
 
@@ -82,15 +81,14 @@ void showTime()
 {
     rtc.refresh();
 
-    display.setBrightness(dim ? 0x00 : 0xFF);
-    blankDisplay();
+    display.setBrightness(dim ? 0x00 : 0x07);
 
-    diplayData[0] = display.encodeDigit(rtc.hour() / 10);
-    diplayData[1] = display.encodeDigit(rtc.hour() % 10) + DISPLAY_COLON;
-    diplayData[2] = display.encodeDigit(rtc.minute() / 10);
-    diplayData[3] = display.encodeDigit(rtc.minute() % 10);
+    displayData[0] = display.encodeDigit(rtc.hour() / 10);
+    displayData[1] = display.encodeDigit(rtc.hour() % 10) + (millis() % 1000 > 500 ? DISPLAY_COLON : 0);
+    displayData[2] = display.encodeDigit(rtc.minute() / 10);
+    displayData[3] = display.encodeDigit(rtc.minute() % 10);
 
-    display.setSegments(diplayData);
+    display.setSegments(displayData);
 }
 
 void loop()
@@ -101,6 +99,11 @@ void loop()
     {
         active = false;
         blankDisplay();
+    }
+
+    if (active)
+    {
+        showTime();
     }
 
     uint16_t r, g, b, c;
