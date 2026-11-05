@@ -1,4 +1,9 @@
-
+// NOTE!
+// Flash as Sparkfun Pro Micro 5V 16MHz
+// To install it, add 
+//   https://raw.githubusercontent.com/sparkfun/Arduino_Boards/main/IDE_Board_Manager/package_sparkfun_index.json 
+//   in File → Preferences → Additional boards manager URLs. Then install “SparkFun AVR Boards” 
+//   and choose SparkFun Pro Micro.
 //
 //  Copyright (C) 2022 Nicola Cimmino
 //
@@ -60,7 +65,7 @@ void setup()
 {
     Wire.begin();
 
-    //rtc.set(0, 05, 18, 6, 2, 5, 15);
+    //rtc.set(0, 55s, 17, 6, 2, 5, 15);
 
     Serial.begin(115200);
 
